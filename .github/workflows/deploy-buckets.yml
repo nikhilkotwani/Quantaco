@@ -57,22 +57,31 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v3
 
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v2
-        with:
-          terraform_version: 1.5.0
+      - name: Set Up Terraform
+        working-directory: terraform  # Set working directory to terraform/
+        run: terraform init
        
-      - name: Validate .tfvars File
+      - name: Check for Missing .tfvars File
+        id: check-missing-tfvars
+        working-directory: terraform  # Set working directory to terraform/
         run: |
-          if [ ! -f "terraform/user_vars/${{ matrix.user }}.tfvars" ]; then
-            echo "Error: .tfvars file for user '${{ matrix.user }}' does not exist."
-            exit 1
-          fi    
+          if [ ! -f "user_vars/${{ matrix.user }}.tfvars" ]; then
+            echo "No .tfvars file found for ${matrix.user}, preparing for destroy."
+            echo "::set-output name=destroy::true"
+          else
+            echo "::set-output name=destroy::false"
+          fi
 
       - name: Authenticate with GCP
         uses: google-github-actions/auth@v1
         with:
-          credentials_json: ${{ secrets.GCP_CREDENTIALS }}
+          credentials_json: ${{ secrets.GCP_CREDENTIALS }}   
+        
+      - name: Destroy User's Bucket if .tfvars is Missing
+        working-directory: terraform  # Set working directory to terraform/
+        if: ${{ steps.check-missing-tfvars.outputs.destroy == 'true' }}
+        run: |
+          terraform destroy -var-file="user_vars/${{ matrix.user }}.tfvars" -auto-approve  
 
       - name: Set GCP Project
         run: gcloud config set project your-gcp-project-id
