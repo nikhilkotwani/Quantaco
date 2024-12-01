@@ -82,8 +82,9 @@ jobs:
         working-directory: terraform  # Set working directory to terraform/
         if: ${{ steps.check-missing-tfvars.outputs.destroy == 'true' }}
         run: |
+            CURRENT_DIR=$(pwd)
             terraform init -reconfigure -backend-config="prefix=user_states/${{ matrix.user }}"
-            terraform destroy -var-file="user_vars/${{ matrix.user }}.tfvars" -auto-approve || echo "No state found to destroy for ${{ matrix.user }}"
+            terraform destroy -var-file="${CURRENT_DIR}/user_vars/${{ matrix.user }}.tfvars" -auto-approve || echo "No state found to destroy for ${{ matrix.user }}"
 
       - name: Initialize and Deploy if new .tfvars is created
         if: ${{ steps.check-missing-tfvars.outputs.destroy == 'false' }}
