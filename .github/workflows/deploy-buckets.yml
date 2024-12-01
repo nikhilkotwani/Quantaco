@@ -78,8 +78,13 @@ jobs:
 
       - name: Initialize and Deploy
         run: |
-          chmod +x scripts/*.sh
-          ./scripts/generate_users.sh
+          for user_file in terraform/user_vars/*.tfvars; do
+            user=$(basename "$user_file" .tfvars)
+            echo "Processing $user..."
+            terraform init -reconfigure -backend-config="prefix=user_states/${user}" || exit 1
+            terraform plan -var-file="$VARS_FILE" || exit 1
+            terraform apply -var-file="$VARS_FILE" -auto-approve || exit 1
+          done
       
       - name: Notify Deployment Success
         run: echo "Deployment for ${{ matrix.user }} completed successfully."
