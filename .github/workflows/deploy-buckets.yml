@@ -79,7 +79,6 @@ jobs:
             fi
 
       - name: Destroy User's Bucket if .tfvars is Missing
-        working-directory: terraform  # Set working directory to terraform/
         if: ${{ steps.check-missing-tfvars.outputs.destroy == 'true' }}
         run: |
             chmod +x scripts/*.sh
