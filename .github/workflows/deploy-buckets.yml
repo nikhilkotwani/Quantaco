@@ -8,55 +8,32 @@ on:
 jobs:
   detect-changes:
     runs-on: ubuntu-latest
-    outputs:
-      changed_users: ${{ steps.get-changed-files.outputs.changed_users }}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
-        with:
-            fetch-depth: 0
-
       - name: Detect Changed .tfvars Files
         id: get-changed-files
         run: |
-          
-          # Find changed .tfvars files in the `terraform/user_vars/` directory
           CHANGED_FILES=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep '^terraform/user_vars/.*\.tfvars$' || true)
-          echo "Changed files: $CHANGED_FILES"
-
-          # Extract user names from changed .tfvars files
-          CHANGED_USERS=$(echo "$CHANGED_FILES" | sed -E 's|terraform/user_vars/(.*)\.tfvars|\1|' | tr '\n' ',' | sed 's/,$//')
-          echo "Changed users: $CHANGED_USERS"
-
-          # Set output
+          CHANGED_USERS=$(echo "$CHANGED_FILES" | sed -E 's|terraform/user_vars/(.*)\.tfvars|\1|' | jq -R -s -c 'split("\n") | map(select(length > 0))')
+          if [ -z "$CHANGED_USERS" ]; then CHANGED_USERS="[]"; fi
           echo "::set-output name=changed_users::$CHANGED_USERS"
+      - name: Debug Changed Users
+        run: |
+          echo "Changed Users: ${{ steps.get-changed-files.outputs.changed_users }}"
 
   deploy:
     needs: detect-changes
-    if: ${{ needs.detect-changes.outputs.changed_users != '' }}
+    if: ${{ needs.detect-changes.outputs.changed_users != '[]' }}
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         user: ${{ fromJson(needs.detect-changes.outputs.changed_users) }}
-    runs-on: ubuntu-latest
-
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
-
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v2
-        with:
-          terraform_version: 1.5.0
-
-      - name: Authenticate with GCP
-        uses: google-github-actions/auth@v1
-        with:
-          credentials_json: ${{ secrets.GCP_CREDENTIALS }}
-
-      - name: Set GCP Project
-        run: gcloud config set project your-gcp-project-id
-
-      - name: Run Terraform Plan and Apply for User
+      - name: Deploy User's Buckets
         run: |
-          chmod +x scripts/create_user_workspace.sh
-          ./scripts/create_user_workspace.sh "${{ matrix.user }}" "terraform/user_vars/${{ matrix.user }}.tfvars"
+          terraform init
+          terraform apply -var-file="terraform/user_vars/${{ matrix.user }}.tfvars" -auto-approve
+
