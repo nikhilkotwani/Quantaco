@@ -13,10 +13,18 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
+        with:
+            fetch-depth: 0
 
       - name: Detect Changed .tfvars Files
         id: get-changed-files
         run: |
+          # Use the default HEAD~1 if ${{ github.event.before }} is invalid
+          BASE_COMMIT=${{ github.event.before }}
+          if [ -z "$BASE_COMMIT" ] || ! git cat-file -e "$BASE_COMMIT^{commit}" 2>/dev/null; then
+          BASE_COMMIT="HEAD~1"
+          fi
+        
           # Find changed .tfvars files in the `terraform/user_vars/` directory
           CHANGED_FILES=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep '^terraform/user_vars/.*\.tfvars$' || true)
           echo "Changed files: $CHANGED_FILES"
