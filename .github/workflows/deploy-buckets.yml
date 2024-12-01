@@ -77,10 +77,10 @@ jobs:
       - name: Set GCP Project
         run: gcloud config set project your-gcp-project-id
 
-      - name: Run Terraform Plan and Apply for User
+      - name: Initialize and Deploy
         run: |
-          chmod +x scripts/create_user_workspace.sh
-          ./scripts/create_user_workspace.sh "${{ matrix.user }}" "terraform/user_vars/${{ matrix.user }}.tfvars"
+          chmod +x scripts/*.sh
+          ./scripts/generate_users.sh
       
       - name: Notify Deployment Success
         run: echo "Deployment for ${{ matrix.user }} completed successfully."
