@@ -74,7 +74,8 @@ jobs:
       - name: Check for Missing .tfvars File
         id: check-missing-tfvars
         run: |
-            if [ ! -f "terraform/user_vars/${{ matrix.user }}.tfvars" ]; then
+            CURRENT_DIR=$(pwd)
+            if [ ! -f "${CURRENT_DIR/terraform/user_vars/${{ matrix.user }}.tfvars" ]; then
                 echo "No .tfvars file found for ${matrix.user}, preparing for destroy."
                 echo "::set-output name=destroy::true"
             else
