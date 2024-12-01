@@ -33,7 +33,6 @@ jobs:
           CHANGED_USERS="[]"
           fi
 
-
           # Set output
           echo "::set-output name=changed_users::$CHANGED_USERS"
 
