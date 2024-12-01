@@ -69,7 +69,18 @@ jobs:
       - name: Set GCP Project
         run: |
           gcloud config set project your-gcp-project-id
+
     
+      - name: Check for Missing .tfvars File
+        id: check-missing-tfvars
+        run: |
+            if [ ! -f "terraform/user_vars/${{ matrix.user }}.tfvars" ]; then
+                echo "No .tfvars file found for ${matrix.user}, preparing for destroy."
+                echo "::set-output name=destroy::true"
+            else
+                echo "::set-output name=destroy::false"
+            fi
+
       - name: Destroy User's Bucket if .tfvars is Missing
         working-directory: terraform  # Set working directory to terraform/
         if: ${{ steps.check-missing-tfvars.outputs.destroy == 'true' }}
