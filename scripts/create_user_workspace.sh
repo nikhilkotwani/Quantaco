@@ -4,7 +4,7 @@ USER=$1
 
 # Initialize and apply Terraform for the user
 CURRENT_DIR=$(pwd)
-
+cd terraform
 TFVARS_FILE="${CURRENT_DIR}/terraform/user_vars/${USER}.tfvars"
 pwd
 ls -ltr
