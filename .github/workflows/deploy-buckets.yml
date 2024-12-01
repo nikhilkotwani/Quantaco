@@ -70,7 +70,7 @@ jobs:
         id: check-missing-tfvars
         working-directory: terraform  # Set working directory to terraform/
         run: |
-          if [ ! -f "user_vars/${{ matrix.user }}.tfvars" ]; then
+          if [ ! -f "terraform/user_vars/${{ matrix.user }}.tfvars" ]; then
             echo "No .tfvars file found for ${matrix.user}, preparing for destroy."
             echo "::set-output name=destroy::true"
           else
@@ -85,7 +85,7 @@ jobs:
         working-directory: terraform  # Set working directory to terraform/
         if: ${{ steps.check-missing-tfvars.outputs.destroy == 'true' }}
         run: |
-          terraform destroy -var-file="user_vars/${{ matrix.user }}.tfvars" -auto-approve  
+          terraform destroy -var-file="terraform/user_vars/${{ matrix.user }}.tfvars" -auto-approve  
 
       - name: Initialize and Deploy
         run: |
