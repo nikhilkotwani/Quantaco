@@ -6,9 +6,11 @@ USER=$1
 CURRENT_DIR=$(pwd)
 cd terraform
 STATE_LIST=$(terraform state list | grep 'google_storage_bucket.user_bucket')
+echo $STATE_LIST
 TFVARS_FILE="${CURRENT_DIR}/terraform/user_vars/${USER}.tfvars"
 pwd
 ls -ltr
+echo $STATE_LIST
 
 for RESOURCE in $STATE_LIST; do
   USER=$(echo "$RESOURCE" | sed -E 's/.*\["(.*)"\]/\1/')
