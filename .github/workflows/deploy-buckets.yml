@@ -65,11 +65,6 @@ jobs:
       - name: Set Up Terraform
         working-directory: terraform  # Set working directory to terraform/
         run: terraform init
-       
-      - name: Set GCP Project
-        run: |
-          gcloud config set project your-gcp-project-id
-
     
       - name: Check for Missing .tfvars File
         id: check-missing-tfvars
