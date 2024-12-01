@@ -38,15 +38,20 @@ jobs:
 
       - name: Debug Changed Users
         run: |
-          echo "Changed Users JSON: ${{ steps.get-changed-files.outputs.changed_users }}"  
+          echo "Changed Users JSON: ${{ steps.get-changed-files.outputs.changed_users }}"
+      
+      - name: Notify No Changes
+        if: ${{ steps.get-changed-files.outputs.changed_users == '[]' }}
+        run: echo "No .tfvars files were changed. Skipping deployment."
 
   deploy:
     needs: detect-changes
-    if: ${{ needs.detect-changes.outputs.changed_users != '' }}
+    if: ${{ needs.detect-changes.outputs.changed_users != '[]' }}
+    runs-on: ubuntu-latest
     strategy:
       matrix:
-        user: ${{ needs.detect-changes.outputs.changed_users }}
-    runs-on: ubuntu-latest
+        user: ${{ fromJson(needs.detect-changes.outputs.changed_users) }}
+    
 
     steps:
       - name: Checkout Code
@@ -56,6 +61,13 @@ jobs:
         uses: hashicorp/setup-terraform@v2
         with:
           terraform_version: 1.5.0
+       
+      - name: Validate .tfvars File
+        run: |
+          if [ ! -f "terraform/user_vars/${{ matrix.user }}.tfvars" ]; then
+            echo "Error: .tfvars file for user '${{ matrix.user }}' does not exist."
+            exit 1
+          fi    
 
       - name: Authenticate with GCP
         uses: google-github-actions/auth@v1
@@ -69,3 +81,6 @@ jobs:
         run: |
           chmod +x scripts/create_user_workspace.sh
           ./scripts/create_user_workspace.sh "${{ matrix.user }}" "terraform/user_vars/${{ matrix.user }}.tfvars"
+      
+      - name: Notify Deployment Success
+        run: echo "Deployment for ${{ matrix.user }} completed successfully."
