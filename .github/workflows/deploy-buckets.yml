@@ -82,7 +82,7 @@ jobs:
         if: ${{ steps.check-missing-tfvars.outputs.destroy == 'true' }}
         run: |
             chmod +x delete_state_for_missing_tfvars.sh
-            ./scripts/delete_state_for_missing_tfvars.sh
+            ./scripts/delete_users.sh
 
       - name: Initialize and Deploy if new .tfvars is created
         if: ${{ steps.check-missing-tfvars.outputs.destroy == 'false' }}
