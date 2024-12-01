@@ -87,7 +87,10 @@ jobs:
         working-directory: terraform  # Set working directory to terraform/
         if: ${{ steps.check-missing-tfvars.outputs.destroy == 'true' }}
         run: |
-          terraform destroy -var-file="terraform/user_vars/${{ matrix.user }}.tfvars" -auto-approve  
+            CURRENT_DIR=$(pwd)
+            cd terraform
+            TFVARS_FILE="${CURRENT_DIR}/terraform/user_vars/${{ matrix.user }}.tfvars"
+            terraform destroy -var-file="$TFVARS_FILE" -auto-approve  
 
       - name: Initialize and Deploy if new .tfvars is created
         if: ${{ steps.check-missing-tfvars.outputs.destroy == 'false' }}
