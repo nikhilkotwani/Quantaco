@@ -57,6 +57,11 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v3
 
+      - name: Authenticate with GCP
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: ${{ secrets.GCP_CREDENTIALS }} 
+
       - name: Set Up Terraform
         working-directory: terraform  # Set working directory to terraform/
         run: terraform init
@@ -71,11 +76,6 @@ jobs:
           else
             echo "::set-output name=destroy::false"
           fi
-
-      - name: Authenticate with GCP
-        uses: google-github-actions/auth@v1
-        with:
-          credentials_json: ${{ secrets.GCP_CREDENTIALS }} 
     
       - name: Set GCP Project
         run: |
