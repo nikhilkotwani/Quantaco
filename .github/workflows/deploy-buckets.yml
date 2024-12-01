@@ -25,7 +25,7 @@ jobs:
           echo "Changed files: $CHANGED_FILES"
 
           # Extract user names from changed .tfvars files
-          CHANGED_USERS=$(echo "$CHANGED_FILES" | sed -E 's|terraform/user_vars/(.*)\.tfvars|\1|' | tr '\n' ',' | sed 's/,$//')
+          CHANGED_USERS=$(echo "$CHANGED_FILES" | sed -E 's|terraform/user_vars/(.*)\.tfvars|\1|' | jq -R -s -c 'split("\n") | map(select(length > 0))')
           echo "Changed users: $CHANGED_USERS"
 
           # If no changes detected, output an empty JSON array
