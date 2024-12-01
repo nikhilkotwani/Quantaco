@@ -84,7 +84,7 @@ jobs:
         run: |
             CURRENT_DIR=$(pwd)
             echo $CURRENT_DIR
-            TFVARS_FILE="${CURRENT_DIR}/terraform/user_vars/${{ matrix.user }}.tfvars"
+            TFVARS_FILE="${CURRENT_DIR}/user_vars/${{ matrix.user }}.tfvars"
             terraform destroy -var-file="$TFVARS_FILE" -auto-approve  
 
       - name: Initialize and Deploy if new .tfvars is created
