@@ -28,12 +28,22 @@ jobs:
           CHANGED_USERS=$(echo "$CHANGED_FILES" | sed -E 's|terraform/user_vars/(.*)\.tfvars|\1|' | tr '\n' ',' | sed 's/,$//')
           echo "Changed users: $CHANGED_USERS"
 
+          # If no changes detected, output an empty JSON array
+          if [ -z "$CHANGED_USERS" ] || [ "$CHANGED_USERS" == "[]" ]; then
+          CHANGED_USERS="[]"
+          fi
+
+
           # Set output
           echo "::set-output name=changed_users::$CHANGED_USERS"
 
+      - name: Debug Changed Users
+        run: |
+          echo "Changed Users JSON: ${{ steps.get-changed-files.outputs.changed_users }}"  
+
   deploy:
     needs: detect-changes
-    if: ${{ needs.detect-changes.outputs.changed_users != '' }}
+    if: ${{ needs.detect-changes.outputs.changed_users != '[]' }}
     strategy:
       matrix:
         user: ${{ fromJson(needs.detect-changes.outputs.changed_users) }}
