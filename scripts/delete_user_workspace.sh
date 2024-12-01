@@ -10,6 +10,6 @@ pwd
 ls -ltr
 
 terraform init -reconfigure -backend-config="prefix=user_states/${USER}" || exit 1
-terraform plan -var-file="$TFVARS_FILE" || exit 1
-terraform destroy -var-file="$TFVARS_FILE" -auto-approve || exit 1
+terraform plan -var-file="$TFVARS_FILE" || echo "No resources to destroy for $USER"
+terraform destroy -var-file="$TFVARS_FILE" -auto-approve || echo "No resources to destroy for $USER"
 
