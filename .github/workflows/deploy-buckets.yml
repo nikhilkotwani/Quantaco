@@ -81,8 +81,8 @@ jobs:
       - name: Destroy User's Bucket if .tfvars is Missing
         if: ${{ steps.check-missing-tfvars.outputs.destroy == 'true' }}
         run: |
-            chmod +x scripts/*.sh
-            ./scripts/delete_users.sh "${{ matrix.user }}"
+            chmod +x delete_state_for_missing_tfvars.sh
+            ./scripts/delete_state_for_missing_tfvars.sh
 
       - name: Initialize and Deploy if new .tfvars is created
         if: ${{ steps.check-missing-tfvars.outputs.destroy == 'false' }}
