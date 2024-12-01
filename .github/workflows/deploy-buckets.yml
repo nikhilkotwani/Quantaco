@@ -88,6 +88,7 @@ jobs:
         if: ${{ steps.check-missing-tfvars.outputs.destroy == 'true' }}
         run: |
             CURRENT_DIR=$(pwd)
+            echo $CURRENT_DIR
             cd terraform
             TFVARS_FILE="${CURRENT_DIR}/terraform/user_vars/${{ matrix.user }}.tfvars"
             terraform destroy -var-file="$TFVARS_FILE" -auto-approve  
