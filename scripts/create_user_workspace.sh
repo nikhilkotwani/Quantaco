@@ -21,4 +21,8 @@ terraform init -reconfigure \
 terraform plan -var-file="$TFVARS_FILE" || exit 1
 terraform apply -var-file="$TFVARS_FILE" -auto-approve || exit 1
 
+# Cleanup
+echo "Cleaning up temporary files..."
+rm -rf .terraform terraform.tfstate terraform.tfstate.backup ~/.terraform.d/plugin-cache
+
 
