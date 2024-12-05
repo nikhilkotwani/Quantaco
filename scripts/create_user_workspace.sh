@@ -10,7 +10,7 @@ TFVARS_FILE="${CURRENT_DIR}/terraform/user_vars/${USER}.tfvars"
 pwd
 ls -ltr
 
-if [ -f "$LOCK_FILE" ]; do
+if [ -f "$LOCK_FILE" ]; then
     echo "Another job is running terraform apply. Waiting..."
     sleep 20
 fi
