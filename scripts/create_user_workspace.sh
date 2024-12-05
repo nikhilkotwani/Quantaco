@@ -14,7 +14,7 @@ ls -ltr
 #for user_file in terraform/user_vars/*.tfvars; do
 DIRECTORY="${CURRENT_DIR}/terraform/user_vars"
 find "$DIRECTORY" -type f | while read -r file; do
-    USER=$(basename "$file")
+    USER=$(basename "$file" .tfvars)
     PREFIX="user_states/${USER}"
     LOCK_OBJECT="${PREFIX}/default.tflock"
     if gsutil stat "gs://terraform-state-bucket-2024-abcd/${LOCK_OBJECT}" &>/dev/null; then
