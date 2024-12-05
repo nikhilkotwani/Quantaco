@@ -1,7 +1,7 @@
 #!/bin/bash
 
 USERIP=$1
-$TFSTATE_BUCKET=$2
+$TFSTATE_BUCKET="terraform-state-bucket-2024-abcd"
 
 
 
