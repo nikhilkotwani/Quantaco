@@ -16,7 +16,6 @@ if [ -f "$LOCK_FILE" ]; then
 fi
 
 terraform init -reconfigure \
--backend-config="bucket=terraform-state-bucket-2024-abcd-${USER}" \
 -backend-config="prefix=user_states/${USER}" || exit 1
 
 terraform plan -var-file="$TFVARS_FILE" || exit 1
