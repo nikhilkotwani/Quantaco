@@ -1,3 +1,3 @@
-bucket_prefix = "quantaco-user5-bucket"
-user_name     = "user5"
+bucket_prefix = "quantaco-user6-bucket"
+user_name     = "user6"
 region        = "US"
