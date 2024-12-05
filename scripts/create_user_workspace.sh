@@ -15,8 +15,7 @@ if gsutil stat "gs://terraform-state-bucket-2024-abcd/default.tflock" &>/dev/nul
 fi
 
 
-terraform init -reconfigure \
--backend-config="prefix=${PREFIX}" || exit 1
+terraform init -reconfigure -backend-config="prefix=user_states/${USERIP}" || exit 1
 
 terraform plan -var-file="$TFVARS_FILE" || exit 1
 terraform apply -var-file="$TFVARS_FILE" -auto-approve || exit 1
