@@ -61,6 +61,11 @@ jobs:
         uses: google-github-actions/auth@v1
         with:
           credentials_json: ${{ secrets.GCP_CREDENTIALS }} 
+
+      - name: Set Up Terraform
+        working-directory: terraform  # Set working directory to terraform/
+        run: terraform init      
+
     
       - name: Check for Missing .tfvars File
         id: check-missing-tfvars
