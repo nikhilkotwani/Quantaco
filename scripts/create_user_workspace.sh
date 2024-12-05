@@ -27,7 +27,7 @@ terraform init -reconfigure -backend-config="prefix=user_states/${USERIP}" || ex
 
 terraform plan -var-file="$TFVARS_FILE" || exit 1
 terraform apply -var-file="$TFVARS_FILE" -auto-approve || exit 1
-sleep 10
+sleep 5
 
 # Cleanup
 echo "Cleaning up temporary files..."
