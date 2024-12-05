@@ -15,7 +15,10 @@ if [ -f "$LOCK_FILE" ]; then
     sleep 20
 fi
 
-terraform init -reconfigure -backend-config="prefix=user_states/${USER}" || exit 1
+terraform init -reconfigure \
+-backend-config="bucket=terraform-state-bucket-2024-abcd-${USER}" \
+-backend-config="prefix=user_states/${USER}" || exit 1
+
 terraform plan -var-file="$TFVARS_FILE" || exit 1
 terraform apply -var-file="$TFVARS_FILE" -auto-approve || exit 1
 terraform force-unlock
