@@ -16,7 +16,6 @@ if [ -f "$LOCK_FILE" ]; then
 fi
 
 terraform init -reconfigure -backend-config="prefix=user_states/${USER}" || exit 1
-terraform workspace select ${USER} || terraform workspace new ${USER}
 terraform plan -var-file="$TFVARS_FILE" || exit 1
 terraform apply -var-file="$TFVARS_FILE" -auto-approve || exit 1
 terraform force-unlock

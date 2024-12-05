@@ -18,7 +18,6 @@ fi
 
 if [ ! -f "$TFVARS_FILE" ]; then
   echo "Error: tfvars file for user '${USER}' does not exist at ${TFVARS_FILE}. Exiting."
-  terraform workspace select ${USER} || terraform workspace new ${USER} || exit 1
   terraform plan -var-file="$TFVARS_FILE" || exit 1
   terraform apply -var-file="$TFVARS_FILE" -auto-approve || exit 1
   terraform force-unlock
