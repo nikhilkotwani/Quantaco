@@ -11,7 +11,7 @@ TFVARS_FILE="${CURRENT_DIR}/terraform/user_vars/${USER}.tfvars"
 pwd
 ls -ltr
 terraform init -reconfigure -backend-config="prefix=user_states/${USER}" || exit 1
-terraform workspace select ${USER} || terraform workspace new ${USER}
+#terraform workspace select ${USER} || terraform workspace new ${USER}
 terraform plan -var-file="$TFVARS_FILE" || exit 1
 
 while [ -f "$LOCK_FILE" ]; do
