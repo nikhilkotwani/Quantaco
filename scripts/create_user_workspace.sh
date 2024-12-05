@@ -1,10 +1,6 @@
 #!/bin/bash
 
 USERIP=$1
-$TFSTATE_BUCKET="terraform-state-bucket-2024-abcd"
-
-
-
 
 # Initialize and apply Terraform for the user
 CURRENT_DIR=$(pwd)
@@ -19,7 +15,7 @@ for user_file in terraform/user_vars/*.tfvars; do
     USER=$(basename "$user_file" .tfvars)
     PREFIX="user_states/${USER}"
     LOCK_OBJECT="${PREFIX}/default.tflock"
-    if gsutil stat "gs://${TFSTATE_BUCKET}/${LOCK_OBJECT}" &>/dev/null; then
+    if gsutil stat "gs://terraform-state-bucket-2024-abcd/${LOCK_OBJECT}" &>/dev/null; then
         echo "Lock exists for a user state file at ${LOCK_OBJECT}."
         sleep 10
     fi
