@@ -61,10 +61,6 @@ jobs:
         uses: google-github-actions/auth@v1
         with:
           credentials_json: ${{ secrets.GCP_CREDENTIALS }} 
-
-      - name: Set Up Terraform
-        working-directory: terraform  # Set working directory to terraform/
-        run: terraform init
     
       - name: Check for Missing .tfvars File
         id: check-missing-tfvars
@@ -78,16 +74,17 @@ jobs:
                 echo "::set-output name=destroy::false"
             fi
 
-      - name: Destroy User's Bucket if .tfvars is Missing
-        if: ${{ steps.check-missing-tfvars.outputs.destroy == 'true' }}
-        run: |
-            chmod +x scripts/*.sh
-            ./scripts/delete_users.sh ${{ matrix.user }}
+      # - name: Destroy User's Bucket if .tfvars is Missing
+      #   if: ${{ steps.check-missing-tfvars.outputs.destroy == 'true' }}
+      #   run: |
+      #       chmod +x scripts/*.sh
+      #       ./scripts/delete_users.sh ${{ matrix.user }}
 
       - name: Initialize and Deploy if new .tfvars is created
         if: ${{ steps.check-missing-tfvars.outputs.destroy == 'false' }}
         run: |
           chmod +x scripts/*.sh
+          ./scripts/initialize_user_backend.sh ${{ matrix.user }}
           ./scripts/generate_users.sh
       
       - name: Notify Deployment Success
