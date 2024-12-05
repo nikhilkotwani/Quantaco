@@ -89,7 +89,7 @@ jobs:
         if: ${{ steps.check-missing-tfvars.outputs.destroy == 'false' }}
         run: |
           chmod +x scripts/*.sh
-          ./scripts/generate_users.sh
+          ./scripts/generate_users.sh terraform-state-bucket-2024-abcd
       
       - name: Notify Deployment Success
         run: echo "Deployment for ${{ matrix.user }} completed successfully."
