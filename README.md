@@ -7,7 +7,6 @@ This project automates the process of creating Google Cloud Storage (GCS) bucket
 ## Project Structure
 
 - `create-user-workspace.sh`: A script to initialize, plan, and apply Terraform for a specific user.
-- `generate_users.sh`: A script that generates Terraform commands for each user and calls `create-user-workspace.sh` for each user.
 - `terraform/user_vars/*.tfvars`: User-specific `.tfvars` files that define variables for each user (e.g., `user1.tfvars`).
 - `main.tf`: The main Terraform configuration file defining a GCS bucket resource.
 - `backend.tf`: Configuration for the backend storage of Terraform's state files.
