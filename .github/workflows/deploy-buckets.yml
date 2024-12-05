@@ -84,7 +84,6 @@ jobs:
         if: ${{ steps.check-missing-tfvars.outputs.destroy == 'false' }}
         run: |
           chmod +x scripts/*.sh
-          ./scripts/initialize_user_backend.sh ${{ matrix.user }}
           ./scripts/generate_users.sh
       
       - name: Notify Deployment Success
