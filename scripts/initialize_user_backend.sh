@@ -33,7 +33,7 @@ fi
 cat > "$BACKEND_FILE" <<EOL
 terraform {
   backend "gcs" {
-    bucket  = "terraform-state-bucket-2024-abcd"
+    bucket  = "terraform-state-bucket-2024-abcd-${USER}"
     prefix  = "${USER_BACKEND_PREFIX}"
   }
 }
@@ -44,10 +44,5 @@ cd terraform || exit 1
 
 # Reinitialize Terraform backend
 terraform init -reconfigure -backend-config="prefix=${USER_BACKEND_PREFIX}" || exit 1
-
-# Restore original backend file if needed
-if [ -f "${BACKEND_FILE}.bak" ]; then
-    mv "${BACKEND_FILE}.bak" "$BACKEND_FILE"
-fi
 
 echo "Backend initialized successfully for user: ${USER}"
