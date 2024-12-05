@@ -78,11 +78,11 @@ jobs:
                 echo "::set-output name=destroy::false"
             fi
 
-    #   - name: Destroy User's Bucket if .tfvars is Missing
-    #     if: ${{ steps.check-missing-tfvars.outputs.destroy == 'true' }}
-    #     run: |
-    #         chmod +x scripts/*.sh
-    #         ./scripts/delete_users.sh ${{ matrix.user }}
+      - name: Destroy User's Bucket if .tfvars is Missing
+        if: ${{ steps.check-missing-tfvars.outputs.destroy == 'true' }}
+        run: |
+            chmod +x scripts/*.sh
+            ./scripts/delete_users.sh ${{ matrix.user }}
 
       - name: Initialize and Deploy if new .tfvars is created
         if: ${{ steps.check-missing-tfvars.outputs.destroy == 'false' }}
