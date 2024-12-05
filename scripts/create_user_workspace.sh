@@ -11,16 +11,16 @@ ls -ltr
 
 # Check if lock exists
 #for user_file in terraform/user_vars/*.tfvars; do
-DIRECTORY="${CURRENT_DIR}/terraform/user_vars"
-find "$DIRECTORY" -type f | while read -r file; do
-    USER=$(basename "$file" .tfvars)
-    PREFIX="user_states/${USER}"
-    LOCK_OBJECT="${PREFIX}/default.tflock"
-    if gsutil stat "gs://terraform-state-bucket-2024-abcd/${LOCK_OBJECT}" &>/dev/null; then
-        echo "Lock exists for a user state file at ${LOCK_OBJECT}."
-        sleep 10
-    fi
-done
+# DIRECTORY="${CURRENT_DIR}/terraform/user_vars"
+# find "$DIRECTORY" -type f | while read -r file; do
+#     USER=$(basename "$file" .tfvars)
+#     PREFIX="user_states/${USER}"
+#     LOCK_OBJECT="${PREFIX}/default.tflock"
+#     if gsutil stat "gs://terraform-state-bucket-2024-abcd/${LOCK_OBJECT}" &>/dev/null; then
+#         echo "Lock exists for a user state file at ${LOCK_OBJECT}."
+#         sleep 10
+#     fi
+# done
 
 
 terraform init -reconfigure -backend-config="prefix=user_states/${USERIP}" || exit 1
